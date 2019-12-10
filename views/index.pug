@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+html(lang="en")
+	head
+		meta(charset="UTF-8")
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		meta(http-equiv="X-UA-Compatible", content="ie=edge")
+		title PIA Remote Web
+		script(src="index.js")
+	body
+		h2 PIA Remote Web
+		h3 Current Selected Region: 
+			span(style="color:purple") #{region}
+		form#reg(action="/reg", method="post")
+			label(for="regions") Change selected region: 
+			select#regions(name="region")
+				each val in regions
+					if val == region
+						option(selected)= val
+					else
+						option= val
+			
+			input(type="submit", value="set", style="margin-left:1em")
+
+		if connected
+			h3 currently 
+				span(style="color:green") connected
+			form#con(action="/dis", method="post")
+				input(type="submit", value="disconnect")
+		else
+			h3 currently 
+				span(style="color:red") disconnected
+			form#con(action="/con", method="post")
+				input(type="submit", value="connect")
+		div#cover(style="position:absolute;width:100%;height:100%;left:0;top:0;background:rgba(0,0,0,0.75);display:none")
