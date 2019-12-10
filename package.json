@@ -17,8 +17,8 @@
     "piactl.exe",
     "privateinternetaccess"
   ],
-  "author": "flamewave000",
-  "license": "ISC",
+  "author": "Andrew Fryer",
+  "license": "MIT",
   "devDependencies": {
     "nodemon": "^2.0.1"
   },
