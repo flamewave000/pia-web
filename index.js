@@ -1,6 +1,71 @@
-const { PIA } = require('./pia');
+if (process.argv.length > 2) {
+	switch (process.argv[2]) {
+		case '--gen-cert':
+			const readline = require('readline');
+			var rl = readline.createInterface({
+				input: process.stdin,
+				output: process.stdout
+			});
+			new Promise((resolve) => {
+				if (process.argv.length == 5)
+					resolve(process.argv[3] + '.pem');
+				else
+					rl.question('Filename for key: [key] ', (answer) => {
+						resolve((answer || 'key') + '.pem');
+					});
+			}).then((keyName) => {
+				return new Promise((resolve) => {
+					if (process.argv.length == 5)
+						resolve({ keyName: keyName, certName: process.argv[4] + '.pem' });
+					else
+						rl.question('Filename for certificate: [cert] ', (answer) => {
+							resolve({ keyName: keyName, certName: (answer || 'cert') + '.pem' });
+						});
+				})
+			}).then((pair) => {
+				rl.close()
+				const csr = '__' + Math.abs(Math.floor(Math.random() * Math.floor(0xFFFFFFFFFFFFFFFF))).toString() + '__.pem';
+				const child_process = require('child_process');
+				child_process.execSync('openssl genrsa -out ' + pair.keyName, )
+				child_process.spawnSync('openssl', ['req', '-new', '-key', pair.keyName, '-out', csr], { stdio: 'inherit' });
+				child_process.execSync(`openssl x509 -req -days 9999 -in ${csr} -signkey ${pair.keyName} -out ${pair.certName}`);
+				child_process.execSync('rm ' + csr);
+				return new Promise((resolve) => {
+					rl = readline.createInterface({
+						input: process.stdin,
+						output: process.stdout
+					});
+					rl.question('Would you like to update the server config to the new key? [y/N] ',
+						(answer) => { resolve([answer == 'y' || answer == 'Y', pair]) })
+				});
+			}).then((updateConfig) => {
+				rl.close();
+				if (!updateConfig[0]) return;
+				console.log('writing to config.json');
+				const fs = require('fs');
+				const config = JSON.parse(fs.readFileSync("config.json", 'utf8'));
+				config.server.https_key = updateConfig[1].keyName;
+				config.server.https_cert = updateConfig[1].certName;
+				fs.writeFileSync('config.json', JSON.stringify(config, null, '\t'));
+			}).catch((reason) => { rl.close(); });
+			break;
+		case '--help':
+		default:
+			console.log(`	npm start             Start server.
+	--help		Display this help message.
+	--gen-cert	Generate HTTPS key/cert pair
+				optional usage: <cmd> --gen-cert <key_name> <cert_name>
+					key_name   Define the key name
+					cert_name  Define the certificate name
+`);
+			break;
+	}
+	return;
+}
+
 const bodyParser = require('body-parser');
-const fs = require('fs');
+const { Config } = require('./config');
+const config = new Config();
 
 const express = require('express');
 const app = express();
@@ -8,56 +73,30 @@ app.set('view engine', 'pug');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
+app.use('/', require('./route').create(config.command));
 
-const config = JSON.parse(fs.readFileSync("config.json", 'utf8'));
-const pia = new PIA(config.command);
+function logServerStart(port, isHttps = false) {
+	console.log(`Express running http${isHttps ? 's' : ''} server → PORT ${port}`);
+}
 
-app.get('/', (req, res) => {
-	console.log('base page request');
-	res.render('index', {
-		'connected': pia.connected,
-		'region': pia.region,
-		'regions': pia.regions
+if (config.server.https_enabled) {
+	const http = require('http');
+	const https = require('https');
+
+	var https_server = https.createServer(config.httpsCredentials, app);
+	var http_server = http.createServer(express().get('/', (req, res) => {
+		res.redirect(`https://${https_server.address().address}:${https_server.address().port}`);
+	}));
+
+	https_server.listen(config.httpsConfig, () => {
+		logServerStart(https_server.address().port, true);
 	});
-})
-app.post('/reg', (req, res) => {
-	console.log('region set request');
-	let wasConnected = pia.connected;
-	pia.region = req.body.region;
-	if(wasConnected) {
-		var counter = 0;
-		while(counter < 10000 && !pia.connected) {
-			sleep(100);
-			counter += 100;
-		}
-	}
-	res.redirect('/');
-});
-
-function sleep(ms) {
-	return new Promise(resolve => setTimeout(resolve, ms));
-  }
-app.post('/con', (req, res) => {
-	console.log("connection request");
-	pia.connect();
-	var counter = 0;
-	while (!pia.connected && counter < 10000) {
-		sleep(100);
-		counter += 100;
-	}
-	res.redirect('/');
-});
-app.post('/dis', (req, res) => {
-	console.log("disconnection request");
-	pia.disconnect();
-	var counter = 0;
-	while (pia.connected && counter < 10000) {
-		sleep(100);
-		counter += 100;
-	}
-	res.redirect('/');
-});
-
-const server = app.listen(config.port, () => {
-	console.log(`Express running → PORT ${server.address().port}`);
-});
+	http_server.listen(config.httpConfig, () => {
+		logServerStart(http_server.address().port);
+	});
+}
+else {
+	app.listen(config.httpConfig, () => {
+		logServerStart(server.address().port);
+	})
+}
