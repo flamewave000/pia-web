@@ -11,3 +11,31 @@ This web UI is meant to interface with the newer `piactl.exe` program that comes
 - Modify currently selected region
 - Connect the client
 - Disconnect the client
+- HTTPS Support
+
+#### Configuration
+
+##### file: `config.json`
+
+```jsonc
+{
+  /* path to the `piactl.exe` program the server is to use for controlling the PIA Client */
+  "command": "/mnt/c/Program\\ Files/Private\\ Internet\\ Access/piactl.exe",
+  "server": {
+    /* Host address for the servers to run on */
+    "host": "localhost",
+    /* Specify servers should prevent port sharing */
+    "exclusive": false,
+    /* Port address for the regular HTTP server to listen on (and companion server when HTTPS is enabled) */
+    "http_port": 8080,
+    /* If `true`, HTTPS will be enabled */
+    "https_enabled": false,
+    /* Port address for the HTTPS server to listen on */
+    "https_port": 8443,
+    /* HTTPS Security Key */
+    "https_key": "./certs/example-key.pem",
+    /* HTTPS Security Certificate */
+    "https_cert": "./certs/example-cert.pem"
+  }
+}
+```
