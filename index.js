@@ -83,8 +83,8 @@ if (config.server.https_enabled) {
 	const http = require('http');
 	const https = require('https');
 
-	var https_server = https.createServer(config.httpsCredentials, app);
-	var http_server = http.createServer(express().get('/', (req, res) => {
+	const https_server = https.createServer(config.httpsCredentials, app);
+	const http_server = http.createServer(express().get('/', (req, res) => {
 		res.redirect(`https://${https_server.address().address}:${https_server.address().port}`);
 	}));
 
@@ -96,7 +96,7 @@ if (config.server.https_enabled) {
 	});
 }
 else {
-	app.listen(config.httpConfig, () => {
+	const server = app.listen(config.server.http_port, config.server.host, () => {
 		logServerStart(server.address().port);
 	})
 }
