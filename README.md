@@ -39,3 +39,9 @@ This web UI is meant to interface with the newer `piactl.exe` program that comes
   }
 }
 ```
+
+#### HTTPS
+
+If Disabled, the server will start listening on the `http_port` as expected.
+
+If Enabled, The server will start on the `https_port`, __but!__ it will also spawn a secondary companion server on the regular `http_port`. This companion server is meant to redirect traffic from the regular http address, to the https server. This is so if you enter the address into your browser, you don't have to include the "https://.." in front.
