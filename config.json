@@ -1,12 +1,15 @@
 {
 	"command": "/mnt/c/Program\\ Files/Private\\ Internet\\ Access/piactl.exe",
-	"server": {
-		"host": "localhost",
-		"exclusive": false,
-		"http_port": 8080,
-		"https_enabled": false,
-		"https_port": 8443,
-		"https_key": "./certs/example-key.pem",
-		"https_cert": "./certs/example-cert.pem"
+	"host": "localhost",
+	"exclusive": false,
+	"http": {
+		"port": 8080
+	},
+	"https": {
+		"enabled": true,
+		"port": 8443,
+		"key": "./certs/example-key.pem",
+		"cert": "./certs/example-cert.pem",
+		"use_companion": true
 	}
 }

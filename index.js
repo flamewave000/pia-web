@@ -26,7 +26,7 @@ if (process.argv.length > 2) {
 				rl.close()
 				const csr = '__' + Math.abs(Math.floor(Math.random() * Math.floor(0xFFFFFFFFFFFFFFFF))).toString() + '__.pem';
 				const child_process = require('child_process');
-				child_process.execSync('openssl genrsa -out ' + pair.keyName, )
+				child_process.execSync('openssl genrsa -out ' + pair.keyName)
 				child_process.spawnSync('openssl', ['req', '-new', '-key', pair.keyName, '-out', csr], { stdio: 'inherit' });
 				child_process.execSync(`openssl x509 -req -days 9999 -in ${csr} -signkey ${pair.keyName} -out ${pair.certName}`);
 				child_process.execSync('rm ' + csr);
@@ -79,7 +79,7 @@ function logServerStart(port, isHttps = false) {
 	console.log(`Express running http${isHttps ? 's' : ''} server → PORT ${port}`);
 }
 
-if (config.server.https_enabled) {
+if (config.https.enabled) {
 	const http = require('http');
 	const https = require('https');
 
@@ -88,15 +88,17 @@ if (config.server.https_enabled) {
 		res.redirect(`https://${https_server.address().address}:${https_server.address().port}`);
 	}));
 
-	https_server.listen(config.httpsConfig, () => {
-		logServerStart(https_server.address().port, true);
-	});
-	http_server.listen(config.httpConfig, () => {
-		logServerStart(http_server.address().port);
-	});
+	if (config.https.use_companion) {
+		https_server.listen(config.httpsConfig, () => {
+			logServerStart(https_server.address().port, true);
+		});
+		http_server.listen(config.httpConfig, () => {
+			logServerStart(http_server.address().port);
+		});
+	}
 }
 else {
-	const server = app.listen(config.server.http_port, config.server.host, () => {
+	const server = app.listen(config.http.port, config.host, () => {
 		logServerStart(server.address().port);
 	})
 }
