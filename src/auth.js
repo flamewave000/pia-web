@@ -21,11 +21,7 @@ module.exports.authCheck = function (req, res, next) {
 	next()
 }
 module.exports.login = function (req, res) {
-	const config = new Config();
-	if (config.https.password)
-		res.render('login');
-	else
-		res.redirect('/');
+	res.render('login');
 }
 module.exports.auth = function (req, res) {
 	const config = new Config();

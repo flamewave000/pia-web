@@ -4,8 +4,8 @@
   "description": "Web interface for PrivateInternetAccess VPN program (piactl.exe)",
   "main": "index.js",
   "scripts": {
-    "nodemon": "npx nodemon index.js",
-    "start": "node index.js",
+    "nodemon": "npx nodemon src/index.js",
+    "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
