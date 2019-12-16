@@ -29,15 +29,17 @@ This web UI is meant to interface with the newer `piactl.exe` program that comes
     ...
   }
   ```
-- For the next set of instructions; if you are on Windows, use `pia-web.bat`, otherwise use `pia-web.sh` for Linux/Mac. I will refer to these two files as simply `pia-web*` for the commands below.
-- To start the regular server, you can do so with the default settings. Simply double click or run from command line the `pia-web*` file.
+- __NOTE: For the next set of instructions; if you are on Windows, use `pia-web.bat`, otherwise use `pia-web.sh` for Linux/Mac. I will refer to these two files as simply `pia-web*` for the commands below.__
+- To start the regular HTTP server, you can do so using the default settings. Simply double click or run from command line the `pia-web*` file.
 - _(Optional)_ __For HTTPS and Authentication__
-  - Update the SSL certificates. You can use the example ones that are already defined, but it is recommended you create a new set.)
-  - Do this by running the command and following the prompts for information: `pia-web* --gen-cert`
+  - Open the `config.json` file in a regular text editor and find the `"enabled"` value. Change it from `"enabled": false` to `"enabled": true`. Save the file and exit.
+  - You can now launch the server as normal using the example SSL certificate included with the project, and the default password (which is `password`). But it is highly recommended that these be changed by following the next instructions.
+  - __Update the SSL certificates__
+    - Do this by running the command and following the prompts for information: `pia-web* --gen-cert`
     - NOTE: Make sure to answer `y`es to the final question which will update the config to use the newly generated certificate.
-  - Update the currently set authentication password using: `pia-web* --pass`
-  - Open the `config.json` file in a regular text editor and find the `enabled` value. Change it from `"enabled": false` to `"enabled": true`. Save the file and exit.
-  - Run the server as normal by calling/double clicking the `pia-web*` file.
+  - __Update Password__
+    - Update the currently set authentication password using: `pia-web* --pass`
+
 
 If you run into any issues, or have questions, just log a ticket in the [issues](https://github.com/flamewave000/pia-web/issues) section of GitHub and I'll try to get back to you quickly.
 
