@@ -10,11 +10,11 @@
 		"port": 8080
 	},
 	"https": {
-		"enabled": true,
+		"enabled": false,
 		"port": 8443,
 		"key": "./certs/example-key.pem",
 		"cert": "./certs/example-cert.pem",
 		"use_companion": true,
-		"password": "a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e"
+		"password": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"
 	}
 }
