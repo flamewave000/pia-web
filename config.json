@@ -1,5 +1,9 @@
 {
-	"command": "\"C:\\Program Files\\Private Internet Access\\piactl.exe\"",
+	"command": "/mnt/c/Program\\ Files/Private\\ Internet\\ Access/piactl.exe",
+	"__cmd_win__": "\"C:\\Program Files\\Private Internet Access\\piactl.exe\"",
+	"__cmd_wsl__": "/mnt/c/Program\\ Files/Private\\ Internet\\ Access/piactl.exe",
+	"__cmd_lin__": "/opt/piavpn/bin/piactl",
+	"__cmd_mac__": "/Applications/Private Internet Access.app/Contents/MacOS/piactl",
 	"host": "localhost",
 	"exclusive": false,
 	"http": {
