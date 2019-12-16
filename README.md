@@ -20,6 +20,15 @@ This web UI is meant to interface with the newer `piactl.exe` program that comes
 - Clone the repository, or download the source
 - From a command line, navigate to the project directory
 - Execute the following command: `npm install`
+- Open the `config.json` file and copy the contents of the appropriate command text to the `"command"` variable.
+  - For Example, if you are on Windows, copy the contents of the `"__cmd_win__"` variable into the `"command"` variable so they both look identical.
+  ```
+  {
+    "command": "<contents to replace>",
+    "__cmd_win__": "<contents to copy>",
+    ...
+  }
+  ```
 - For the next set of instructions; if you are on Windows, use `pia-web.bat`, otherwise use `pia-web.sh` for Linux/Mac. I will refer to these two files as simply `pia-web*` for the commands below.
 - To start the regular server, you can do so with the default settings. Simply double click or run from command line the `pia-web*` file.
 - _(Optional)_ __For HTTPS and Authentication__
