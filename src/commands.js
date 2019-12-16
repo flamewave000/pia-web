@@ -63,12 +63,13 @@ module.exports.gen_cert = function () {
 	}).catch((reason) => { rl.close(); });
 }
 module.exports.help = function () {
-	console.log(`	npm start             Start server.
-	--help		Display this help message.
-	--pass		Set the server password for HTTPS (saves to config.json)
-	--gen-cert	Generate HTTPS key/cert pair
-				optional usage: <cmd> --gen-cert <key_name> <cert_name>
-					key_name   Define the key name
-					cert_name  Define the certificate name
+	console.log(`    pia-web.[sh|bat] (command)
+    (nothing)   Starts the server.
+    --help      Display this help message.
+    --pass      Set the server password for HTTPS (saves to config.json)
+    --gen-cert  Generate HTTPS key/cert pair
+                optional usage: <cmd> --gen-cert <key_name> <cert_name>
+                    key_name   Define the key name
+                    cert_name  Define the certificate name
 `);
 }

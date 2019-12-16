@@ -1,10 +1,10 @@
 # pia-web
 
-### Private Internet Access Remote Web UI
+## Private Internet Access Remote Web UI
 
 This web UI is meant to interface with the newer `piactl.exe` program that comes with the PIA desktop client. To change how this is referenced, modify the `config.json` file. The `command` field points to the program in a manner fit for your system. I am currently running Node within [WSL](https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux) and referencing the program from there, hence the `mnt/c/...` nonsense. You can also modify the `port` number within the config file.
 
-#### The current features:
+## The current features:
 
 - Display connection status
 - Display currently selected region
@@ -12,10 +12,11 @@ This web UI is meant to interface with the newer `piactl.exe` program that comes
 - Connect the client
 - Disconnect the client
 - HTTPS Support
+- Authentication via HTTPS
 
-#### Configuration
+## Configuration
 
-##### file: `config.json`
+### file: `config.json`
 
 ```jsonc
 {
@@ -39,13 +40,46 @@ This web UI is meant to interface with the newer `piactl.exe` program that comes
     /* HTTPS Security Certificate */
     "cert": "./certs/example-cert.pem",
     /* If true, a companion HTTP server will be started to soley redirect traffic to the HTTPS server */
-    "use_companion": true
+    "use_companion": true,
+    /* Hashed password for authentication */
+    "password": "a591...146e"
   }
 }
 ```
 
-#### HTTPS
+## HTTPS
 
 If Disabled, the server will start listening on the `http_port` as expected.
 
 If Enabled, The server will start on the `https_port`, __but!__ it will also spawn a secondary companion server on the regular `http_port`. This companion server is meant to redirect traffic from the regular http address, to the https server. This is so if you enter the address into your browser, you don't have to include the "https://.." in front. This can be disabled by setting `use_companion` to `false`.
+
+## Authentication
+
+Only available when HTTPS is enabled.
+
+The config file contains a single password entry that holds a SHA256 hashed password. This can be updated using the [`--pass`](#--pass) command.
+
+## Commands
+
+### `--help`
+
+Displays the following help message:
+
+```
+    pia-web.[sh|bat] (command)
+    (nothing)   Starts the server.
+    --help      Display this help message.
+    --pass      Set the server password for HTTPS (saves to config.json)
+    --gen-cert  Generate HTTPS key/cert pair
+                optional usage: <cmd> --gen-cert <key_name> <cert_name>
+                    key_name   Define the key name
+                    cert_name  Define the certificate name
+```
+
+### `--pass`
+
+Generates a password and stores the result in the `config.json`.
+
+### `--gen-cert`
+
+Generates a self-signed SSL certificate and key. This can be used with HTTPS. At the end of the generation process, it will ask if you wish to use the new certificate. If answered yes, it will update the `config.json` to use the new files.
