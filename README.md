@@ -39,6 +39,8 @@ This web UI is meant to interface with the newer `piactl.exe` program that comes
   - Open the `config.json` file in a regular text editor and find the `enabled` value. Change it from `"enabled": false` to `"enabled": true`. Save the file and exit.
   - Run the server as normal by calling/double clicking the `pia-web*` file.
 
+If you run into any issues, or have questions, just log a ticket in the [issues](https://github.com/flamewave000/pia-web/issues) section of GitHub and I'll try to get back to you quickly.
+
 ## Configuration
 
 ### file: `config.json`
