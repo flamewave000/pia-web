@@ -1,7 +1,22 @@
 if (process.argv.length > 2) {
+	const readline = require('readline');
 	switch (process.argv[2]) {
+		case '--pass':
+			var rl = readline.createInterface({
+				input: process.stdin,
+				output: process.stdout
+			})
+			rl.question('Enter password: ', (answer) => {
+				rl.close();
+				const crypto = require('crypto');
+				let hash = crypto.createHash('sha256').update(answer).digest('hex');
+				const fs = require('fs');
+				const config = JSON.parse(fs.readFileSync("config.json", 'utf8'));
+				config.https.password = hash;
+				fs.writeFileSync('config.json', JSON.stringify(config, null, '\t'));
+			})
+			break;
 		case '--gen-cert':
-			const readline = require('readline');
 			var rl = readline.createInterface({
 				input: process.stdin,
 				output: process.stdout
@@ -44,8 +59,8 @@ if (process.argv.length > 2) {
 				console.log('writing to config.json');
 				const fs = require('fs');
 				const config = JSON.parse(fs.readFileSync("config.json", 'utf8'));
-				config.server.https_key = updateConfig[1].keyName;
-				config.server.https_cert = updateConfig[1].certName;
+				config.https.key = updateConfig[1].keyName;
+				config.https.cert = updateConfig[1].certName;
 				fs.writeFileSync('config.json', JSON.stringify(config, null, '\t'));
 			}).catch((reason) => { rl.close(); });
 			break;
@@ -53,6 +68,7 @@ if (process.argv.length > 2) {
 		default:
 			console.log(`	npm start             Start server.
 	--help		Display this help message.
+	--pass		Set the server password for HTTPS (saves to config.json)
 	--gen-cert	Generate HTTPS key/cert pair
 				optional usage: <cmd> --gen-cert <key_name> <cert_name>
 					key_name   Define the key name
@@ -73,7 +89,11 @@ app.set('view engine', 'pug');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
-app.use('/', require('./route').create(config.command));
+const auth = require('./auth');
+app.get('/login', auth.login);
+app.post('/auth', auth.auth);
+app.use(auth.authCheck);
+app.use('/',  require('./route').create(config.command));
 
 function logServerStart(port, isHttps = false) {
 	console.log(`Express running http${isHttps ? 's' : ''} server → PORT ${port}`);

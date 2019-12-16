@@ -16,6 +16,7 @@ class HttpsConfig {
 	get key() { return this.config.key; }
 	get cert() { return this.config.cert; }
 	get use_companion() { return this.config.use_companion; }
+	get password() { return this.config.password; }
 }
 
 class Config {

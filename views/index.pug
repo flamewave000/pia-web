@@ -10,7 +10,7 @@ html(lang="en")
 		h2 PIA Remote Web
 		h3 Current Selected Region: 
 			span(style="color:purple") #{region}
-		form#reg(action="/reg", method="post")
+		form#reg(action="/reg?auth=" + auth, method="post")
 			label(for="regions") Change selected region: 
 			select#regions(name="region")
 				each val in regions
@@ -24,11 +24,11 @@ html(lang="en")
 		if connected
 			h3 currently 
 				span(style="color:green") connected
-			form#con(action="/dis", method="post")
+			form#con(action="/dis?auth=" + auth, method="post")
 				input(type="submit", value="disconnect")
 		else
 			h3 currently 
 				span(style="color:red") disconnected
-			form#con(action="/con", method="post")
+			form#con(action="/con?auth=" + auth, method="post")
 				input(type="submit", value="connect")
 		div#cover(style="position:absolute;width:100%;height:100%;left:0;top:0;background:rgba(0,0,0,0.75);display:none")

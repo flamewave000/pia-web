@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+html(lang="en")
+	head
+		meta(charset="UTF-8")
+		title PIA Web Login
+		script(src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js")
+		script(src="login.js")
+	body
+		form(onSubmit="return login()")
+			label(for="password") password: 
+			input#password(type="password", name="pwd")
+			input(type="submit", value="login")

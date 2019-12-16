@@ -7,15 +7,15 @@ module.exports.create = function (command) {
 	function sleep(ms) {
 		return new Promise(resolve => setTimeout(resolve, ms));
 	}
-
 	router.get('/', (req, res) => {
 		console.log('base page request');
 		res.render('index', {
+			'auth': encodeURI(req.query.auth),
 			'connected': pia.connected,
 			'region': pia.region,
 			'regions': pia.regions
 		});
-	})
+	});
 	router.post('/reg', (req, res) => {
 		console.log('region set request');
 		let wasConnected = pia.connected;
@@ -27,7 +27,7 @@ module.exports.create = function (command) {
 				counter += 100;
 			}
 		}
-		res.redirect('/');
+		res.redirect('/?auth=' + encodeURI(req.query.auth));
 	});
 	router.post('/con', (req, res) => {
 		console.log("connection request");
@@ -37,7 +37,7 @@ module.exports.create = function (command) {
 			sleep(100);
 			counter += 100;
 		}
-		res.redirect('/');
+		res.redirect('/?auth=' + encodeURI(req.query.auth));
 	});
 	router.post('/dis', (req, res) => {
 		console.log("disconnection request");
@@ -47,7 +47,7 @@ module.exports.create = function (command) {
 			sleep(100);
 			counter += 100;
 		}
-		res.redirect('/');
+		res.redirect('/?auth=' + encodeURI(req.query.auth));
 	});
 	return router;
 }
