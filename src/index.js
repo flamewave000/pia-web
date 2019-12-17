@@ -25,10 +25,12 @@ app.set('view engine', 'pug');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
-const auth = require('./auth');
-app.get('/login', auth.login);
-app.post('/auth', auth.auth);
-app.use(auth.authCheck);
+if (config.https.enabled) {
+	const auth = require('./auth');
+	app.get('/login', auth.login);
+	app.post('/auth', auth.auth);
+	app.use(auth.authCheck);
+}
 app.use('/', require('./route').create(config.command));
 
 function logServerStart(port, isHttps = false) {
