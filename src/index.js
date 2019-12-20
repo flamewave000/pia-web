@@ -42,14 +42,14 @@ if (config.https.enabled) {
 	const https = require('https');
 
 	const https_server = https.createServer(config.httpsCredentials, app);
-	const http_server = http.createServer(express().get('/', (req, res) => {
-		res.redirect(`https://${https_server.address().address}:${https_server.address().port}`);
-	}));
+	https_server.listen(config.httpsConfig, () => {
+		logServerStart(https_server.address().port, true);
+	});
 
 	if (config.https.use_companion) {
-		https_server.listen(config.httpsConfig, () => {
-			logServerStart(https_server.address().port, true);
-		});
+		const http_server = http.createServer(express().get('/', (req, res) => {
+			res.redirect(`https://${https_server.address().address}:${https_server.address().port}`);
+		}));
 		http_server.listen(config.httpConfig, () => {
 			logServerStart(http_server.address().port);
 		});
