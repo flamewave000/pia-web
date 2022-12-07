@@ -24,8 +24,8 @@
     "nodemon": "^2.0.1"
   },
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "express": "^4.17.1",
+    "body-parser": "^1.20.1",
+    "express": "^4.18.2",
     "http": "0.0.0",
     "https": "^1.0.0",
     "pug": "^2.0.4"
